@@ -21,13 +21,19 @@
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="GameMain.h" />
-    <ClInclude Include="SceneManeger.h" />
+    <ClInclude Include="KeyManager.h" />
+    <ClInclude Include="PadInput.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="common.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="GameMain.cpp" />
-    <ClCompile Include="SceneManeger.cpp" />
+    <ClCompile Include="KeyManager.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PadInput.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
