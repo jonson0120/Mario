@@ -11,29 +11,74 @@ Player::Player()
 	Walk = 0;
 	Speed = 0;
 	Move = true;
-	LoadDivGraph("1-1image/Mario/mario", 9, 9, 1, 32, 32, PlayerImage);
+	LoadDivGraph("1-1image/Mario/mario.png", 9, 9, 1, 32, 32, PlayerImage);
+
+	Width = 32;
+	Height = 32;
+	jump = 0;
+	fall = 0;
 
 }
 
 void Player::Update()
 {
-	if (JoypadX >= MARGIN && Move)
+
+	InitPad();
+	if (Move)
 	{
-		Speed += 0.5;
-		Walk++;
+
+		//横移動
+		if (JoypadX >= MARGIN && Move)
+		{
+			Speed += 2;
+			Walk++;
+			TurnFlg = FALSE;
+		}
+		else if (JoypadX <= -MARGIN && Move) {
+			Speed -= 2;	//移動量を減算
+			TurnFlg = TRUE;
+			Walk++;			//歩行アニメーション進行
+		}
+		//非スティック入力時
+		else
+		{
+			Walk = 0;	//歩行アニメーションリセット
+		}
+		
+		
+		//Aボタン・ジャンプ
+		if (PAD_INPUT::OnClick(XINPUT_BUTTON_A) && jump < 1 && Move)
+		{
+			//落下とジャンプ
+			float fallinit = 19;
+			fall = -fallinit;	//落下速度をマイナスにする
+			jump++;				//ジャンプ回数を増やす
+		}
+
+		//落下速度管理
+		if (fall < fallinit)
+		{
+			//落下速度を増やす
+			fall += (fallinit * 2) / 66;
+			if (fall > fallinit)
+			{
+				fall = fallinit;	//落下速度の最大値
+			}
+		}
+		else
+		{
+			jump = 0;
+		}
+
 	}
-	else if (JoypadX <= -MARGIN && Move) {
-		Speed -= 0.5;	//移動量を減算
-					
-		Walk++;			//歩行アニメーション進行
-	}
-	if (40 <= Walk)Walk = 0;
+	if (16 <= Walk)Walk = 0;
 }
 
 void Player::Draw()const
 {
 	int fix = 0;
-	DrawRotaGraph(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + Height / 4 + fix, 1.0f, 0,PlayerImage[Walk / 10], TRUE);
+
+	DrawRotaGraph(SCREEN_WIDTH / 2+Speed, SCREEN_HEIGHT / 2 + fall, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
 }
 
 void Player::InitPad()
