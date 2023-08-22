@@ -17,7 +17,7 @@ Player::Player()
 	Height = 32;
 	jump = 0;
 	fall = 0;
-
+	fallinit = 19;
 }
 
 void Player::Update()
@@ -45,12 +45,12 @@ void Player::Update()
 			Walk = 0;	//歩行アニメーションリセット
 		}
 		
+		//落下とジャンプ
 		
 		//Aボタン・ジャンプ
 		if (PAD_INPUT::OnClick(XINPUT_BUTTON_A) && jump < 1 && Move)
 		{
-			//落下とジャンプ
-			float fallinit = 19;
+			
 			fall = -fallinit;	//落下速度をマイナスにする
 			jump++;				//ジャンプ回数を増やす
 		}
@@ -59,7 +59,7 @@ void Player::Update()
 		if (fall < fallinit)
 		{
 			//落下速度を増やす
-			fall += (fallinit * 2) / 66;
+			fall += (fallinit * 2) / 50;
 			if (fall > fallinit)
 			{
 				fall = fallinit;	//落下速度の最大値
@@ -79,6 +79,7 @@ void Player::Draw()const
 	int fix = 0;
 
 	DrawRotaGraph(SCREEN_WIDTH / 2+Speed, SCREEN_HEIGHT / 2 + fall, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
+	
 }
 
 void Player::InitPad()

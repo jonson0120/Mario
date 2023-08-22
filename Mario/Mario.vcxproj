@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="GameMainScene.h" />
     <ClInclude Include="KeyManager.h" />
     <ClInclude Include="PadInput.h" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="GameMainScene.cpp" />
     <ClCompile Include="KeyManager.cpp" />
     <ClCompile Include="Main.cpp" />

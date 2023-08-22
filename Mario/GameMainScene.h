@@ -6,6 +6,10 @@ class GameMainScene : public AbstractScene
 {
 private:
 	Player player;				//ƒvƒŒƒCƒ„[
+
+	int CameraX;
+	int CameraY;
+
 public:
 	GameMainScene();
 
