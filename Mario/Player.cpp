@@ -7,7 +7,8 @@
 
 Player::Player()
 {
-
+	location = 0;
+	Ground = true;
 	Walk = 0;
 	Speed = 0;
 	Move = true;
@@ -24,53 +25,69 @@ void Player::Update()
 {
 
 	InitPad();
-	if (Move)
-	{
-
+	
+		
 		//横移動
-		if (JoypadX >= MARGIN && Move)
+		//歩く
+		if (JoypadX >= MARGIN && !PAD_INPUT::OnPressed(XINPUT_BUTTON_A))
 		{
 			Speed += 2;
 			Walk++;
 			TurnFlg = FALSE;
 		}
-		else if (JoypadX <= -MARGIN && Move) {
+		else if (JoypadX <= -MARGIN && !PAD_INPUT::OnPressed(XINPUT_BUTTON_A)) {
 			Speed -= 2;	//移動量を減算
 			TurnFlg = TRUE;
 			Walk++;			//歩行アニメーション進行
+		}
+
+		//走る
+		else if (JoypadX >= MARGIN && PAD_INPUT::OnPressed(XINPUT_BUTTON_A))
+		{
+			Speed += 4;
+			Walk++;
+			Walk++;
+			TurnFlg = FALSE;
+		}
+		else if (JoypadX <= -MARGIN && PAD_INPUT::OnPressed(XINPUT_BUTTON_A)) {
+			Speed -= 4;	//移動量を減算
+			TurnFlg = TRUE;
+			Walk++;			//歩行アニメーション進行
+			Walk++;
 		}
 		//非スティック入力時
 		else
 		{
 			Walk = 0;	//歩行アニメーションリセット
 		}
-		
-		//落下とジャンプ
-		
-		//Aボタン・ジャンプ
-		if (PAD_INPUT::OnClick(XINPUT_BUTTON_A) && jump < 1 && Move)
-		{
-			
-			fall = -fallinit;	//落下速度をマイナスにする
-			jump++;				//ジャンプ回数を増やす
-		}
 
-		//落下速度管理
-		if (fall < fallinit)
+		if (Ground)
 		{
-			//落下速度を増やす
-			fall += (fallinit * 2) / 50;
-			if (fall > fallinit)
-			{
-				fall = fallinit;	//落下速度の最大値
-			}
+			JumpPower = 0;
 		}
 		else
 		{
-			jump = 0;
+			// 落下加速度を加える
+			JumpPower -= 1;
 		}
 
-	}
+
+		if (PAD_INPUT::OnClick(XINPUT_BUTTON_B) && Ground)//ジャンプ
+		{
+			Ground = false;
+			JumpPower = 15;
+			location -= 15;
+		}
+		//落下とジャンプ
+		//Aボタン・ジャンプ
+		location -= JumpPower;
+
+		if ( location> 0)
+		{
+			location = 0;
+		}
+		
+	
 	if (16 <= Walk)Walk = 0;
 }
 
@@ -78,8 +95,9 @@ void Player::Draw()const
 {
 	int fix = 0;
 
-	DrawRotaGraph(SCREEN_WIDTH / 2+Speed, SCREEN_HEIGHT / 2 + fall, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
-	
+	DrawRotaGraph(SCREEN_WIDTH / 2+Speed, SCREEN_HEIGHT / 2 + location, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
+	DrawFormatString(0, 0, 0xffffff, "%d", location);
+	DrawFormatString(0, 10, 0xffffff, "%f", Speed);
 }
 
 void Player::InitPad()
