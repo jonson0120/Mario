@@ -26,6 +26,7 @@ private:
 	int Top_Image;
 	int Number_Image[15];
 	int Select_Image;
+	int Carsol_Image;
 
 	int CursorSE;
 	int TitleBGM;

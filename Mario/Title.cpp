@@ -1,4 +1,5 @@
 ﻿#include"Title.h"
+#include"GameMainScene.h"
 #include"AbstractScene.h"
 
 Title::Title() 
@@ -16,6 +17,7 @@ Title::Title()
 	Time_Image = LoadGraph("1-1image/UI/time.png");
 	Top_Image = LoadGraph("1-1image/UI/top.png");
 	Select_Image = LoadGraph("1-1image/UI/Select.png");
+	Carsol_Image = LoadGraph("1-1image/Item/mushroom.png");
 	LoadDivGraph("1-1image/UI/uicoin.png",4,4,1,16,16,Coin_Image);
 	LoadDivGraph("1-1image/UI/num.png", 15, 15, 1, 16, 16, Number_Image);
 	
@@ -24,7 +26,37 @@ Title::Title()
 
 AbstractScene* Title::Update() 
 {
+	if (Interval < 30)Interval++;
+	JoyPadY = PAD_INPUT::GetPadThumbLY();
+
+	if (JoyPadY > MARGIN && Interval >= 30) {
+		PlaySoundMem(CursorSE, DX_PLAYTYPE_BACK);
+		Select--;
+		Interval = 0;
+	}
+	else if (JoyPadY < -MARGIN && Interval >= 30) {
+		PlaySoundMem(CursorSE, DX_PLAYTYPE_BACK);
+		Select++;
+		Interval = 0;
+	}
+
+	if (JoyPadY < MARGIN && -MARGIN < JoyPadY && !PAD_INPUT::OnPressed(XINPUT_BUTTON_B))Interval = 30;
+
+	if (Select == 0) Menu_Number = TITLE_MENU::START;
+	if (Select == 1) Menu_Number = TITLE_MENU::END;
+
+	if (Select < 0)Select = 1;
+	if (Select > 1)Select = 0;
+
 	
+	if (PAD_INPUT::OnPressed(XINPUT_BUTTON_B) && Interval >= 30) {
+		if (TITLE_MENU::START == Menu_Number) return new GameMainScene();
+		if (TITLE_MENU::END == Menu_Number)return nullptr;
+		Interval = 0;
+	}
+	
+
+
 	CTime++;
 	if (CTime % 12 == 0)
 	{
@@ -37,6 +69,7 @@ AbstractScene* Title::Update()
 void Title::Draw() const 
 {
 	DrawGraph(0, 0, Back_Image, true);//背景画像
+	DrawGraph(180, 290 + Select * 30, Carsol_Image, TRUE);
 	//マリオの名前
 	DrawGraph(90, 25, MarioName_Image, true);
 	//ステージ表記画像
