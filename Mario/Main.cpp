@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     
 
-    SceneManager sceneMng((AbstractScene*)new GameMainScene());
+    SceneManager sceneMng((AbstractScene*)new Title());
 
     //ÉQÅ[ÉÄÉãÅ[Év
     while (ProcessMessage() == 0 && sceneMng.Update() != nullptr)
