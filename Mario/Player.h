@@ -3,6 +3,7 @@ class Player
 {
 private:
 
+	int jump;
 	bool Ground;
 	int location;
 	int JumpPower;         //ジャンプ
@@ -15,7 +16,6 @@ private:
 	int x, y;               //座標
 	float fallinit;
 	float fall;
-	int jump;
 	int JoypadX, JoypadY;	//パッド入力値
 	float PadangL;			//パッド入力角度
 	int TriggerL, TriggerR;	//トリガー入力値
@@ -38,6 +38,7 @@ public:
 
 	//索敵
 	bool WaitSearch() { return Search; }
+
 	//座標セット
 	void SetX(int X) { x = X; }
 	void SetY(int Y) { y = Y; }

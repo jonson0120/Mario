@@ -7,6 +7,8 @@
 
 Player::Player()
 {
+
+	jump = 0;
 	location = 0;
 	Ground = true;
 	Walk = 0;
@@ -14,11 +16,8 @@ Player::Player()
 	Move = true;
 	LoadDivGraph("1-1image/Mario/mario.png", 9, 9, 1, 32, 32, PlayerImage);
 
-	Width = 32;
-	Height = 32;
-	jump = 0;
-	fall = 0;
-	fallinit = 19;
+	x = SCREEN_WIDTH / 2;
+	y = SCREEN_HEIGHT / 2;
 }
 
 void Player::Update()
@@ -61,6 +60,8 @@ void Player::Update()
 			Walk = 0;	//歩行アニメーションリセット
 		}
 
+		//落下とジャンプ
+		//Aボタン・ジャンプ
 		if (Ground)
 		{
 			JumpPower = 0;
@@ -70,34 +71,40 @@ void Player::Update()
 			// 落下加速度を加える
 			JumpPower -= 1;
 		}
-
-
 		if (PAD_INPUT::OnClick(XINPUT_BUTTON_B) && Ground)//ジャンプ
 		{
+			jump = 1;
 			Ground = false;
 			JumpPower = 15;
 			location -= 15;
 		}
-		//落下とジャンプ
-		//Aボタン・ジャンプ
+		if (jump == 1&&location==0)
+		{
+			jump = 0;
+			Ground = true;
+		}
+		
+		
 		location -= JumpPower;
 
 		if ( location> 0)
 		{
 			location = 0;
 		}
-		
-	
+		if (Speed <= -300)
+		{
+			Speed = -300;
+		}
 	if (16 <= Walk)Walk = 0;
 }
 
 void Player::Draw()const
 {
-	int fix = 0;
+	
 
-	DrawRotaGraph(SCREEN_WIDTH / 2+Speed, SCREEN_HEIGHT / 2 + location, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
-	DrawFormatString(0, 0, 0xffffff, "%d", location);
-	DrawFormatString(0, 10, 0xffffff, "%f", Speed);
+	DrawRotaGraph(x+Speed, y + location, 1.0f, 0,PlayerImage[Walk / 4], TRUE,TurnFlg);
+	DrawFormatString(0, 0, 0xffffff, "%d", y+location);
+	DrawFormatString(0, 20, 0xffffff, "%f", x+Speed);
 }
 
 void Player::InitPad()
